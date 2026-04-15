@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-nosotros',
@@ -14,6 +15,10 @@ export class NosotrosComponent implements OnInit {
   public contenidos: { [key: string]: string } = {};
 
   ngOnInit(): void {
+    if (!environment.apiUrl) {
+      return;
+    }
+
     this.apiService.getWebData('CORP').subscribe({
       next: (res: any) => {
         res.contenidos.forEach((c: any) => {

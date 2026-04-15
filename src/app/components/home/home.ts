@@ -3,6 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { EmpleoService, WebEmpleo } from '../../services/empleo.service';
+import { environment } from '../../../environments/environment';
 import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
@@ -248,6 +249,43 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.cargarEmpleos();
   }
 
+  cargarDatos(): void {
+    if (!environment.apiUrl) {
+      return;
+    }
+
+    this.apiService.getWebData('CORP').subscribe({
+      next: (res: any) => {
+        this.webData = res;
+        if (res.contenidos && Array.isArray(res.contenidos)) {
+          res.contenidos.forEach((c: any) => {
+            if (c.clave && c.valorTextual) {
+              this.contenidos[c.clave] = c.valorTextual;
+            }
+          });
+        }
+      },
+      error: (err: any) => {
+        console.error('Error al conectar con el Backend:', err);
+      }
+    });
+  }
+
+  cargarEmpleos(): void {
+    if (!environment.apiUrl) {
+      return;
+    }
+
+    this.empleoService.obtenerEmpleos().subscribe({
+      next: (data) => {
+        this.empleos = data;
+      },
+      error: (err) => {
+        console.error('Error cargando empleos', err);
+      }
+    });
+  }
+
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       // Forzar reproducción del video si existe
@@ -300,36 +338,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     elements.forEach(el => observer.observe(el));
   }
 
-  cargarDatos(): void {
-    this.apiService.getWebData('CORP').subscribe({
-      next: (res: any) => {
-        this.webData = res;
-        if (res.contenidos && Array.isArray(res.contenidos)) {
-          res.contenidos.forEach((c: any) => {
-            if (c.clave && c.valorTextual) {
-              this.contenidos[c.clave] = c.valorTextual;
-            }
-          });
-        }
-      },
-      error: (err: any) => {
-        console.error('Error al conectar con el Backend:', err);
-      }
-    });
-  }
-
-  cargarEmpleos(): void {
-    this.empleoService.obtenerEmpleos().subscribe({
-      next: (data) => {
-        this.empleos = data;
-      },
-      error: (err) => {
-        console.error('Error cargando empleos', err);
-      }
-    });
-  }
-
   enviarFormulario(form: NgForm): void {
+    if (!environment.apiUrl) {
+      this.mensajeError = 'El backend no está configurado. No es posible enviar el formulario.';
+      return;
+    }
+
     if (form.invalid) {
       this.mensajeError = 'Por favor, completa todos los campos requeridos.';
       return;
