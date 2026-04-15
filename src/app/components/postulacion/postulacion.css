@@ -1,0 +1,73 @@
+/* Animaciones */
+.tab-fade-in {
+    animation: tabFadeInUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes tabFadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.99);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.immersive-gallery-in {
+    animation: immersiveScaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes immersiveScaleIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Transiciones de Stepper */
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+/* Estilos de inputs */
+input:focus, textarea:focus {
+    border-color: #7023C6;
+    box-shadow: 0 0 0 4px rgba(112, 35, 198, 0.1);
+}
+
+/* Custom Checkbox y Radio si fueran necesarios */
+input[type="file"]::-webkit-file-upload-button {
+    cursor: pointer;
+}
+
+/* Deshabilitado */
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Responsividad */
+.form-input-cv {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    outline: none;
+    font-size: 0.875rem;
+}
+
+.form-input-cv:focus {
+    border-color: #7023C6;
+    box-shadow: 0 0 0 4px rgba(112, 35, 198, 0.05);
+}
+
+textarea.form-input-cv {
+    resize: vertical;
+    min-height: 80px;
+}

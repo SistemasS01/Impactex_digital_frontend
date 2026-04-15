@@ -1,0 +1,97 @@
+<!-- PÁGINA CORPORATIVA EDITORIAL (ESTILO PREMIUM IMPACTEX) -->
+<div class="w-full bg-white min-h-screen pb-40">
+  
+  <!-- CABECERA HERO DE CATEGORÍA -->
+  <header class="w-full bg-[#fcfcfc] pt-40 pb-32 px-6 lg:px-12 border-b border-gray-100 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto relative z-10">
+      <a routerLink="/" class="text-[10px] font-black uppercase tracking-[0.3em] text-[#999] hover:text-black transition-colors mb-16 inline-block">
+        ← Ir al Escritorio
+      </a>
+      
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
+        <div class="max-w-4xl">
+          <h1 class="text-[12vw] lg:text-[10vw] font-black leading-[0.85] tracking-tighter text-black uppercase mb-8" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+            {{ pageData.title }}
+          </h1>
+          <p class="text-xl lg:text-3xl font-light text-gray-400 max-w-2xl leading-relaxed">
+            {{ pageData.subtitle }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Decoración sutil de fondo -->
+    <div class="absolute -right-20 -bottom-20 text-[30vw] font-black text-gray-50 opacity-[0.4] select-none pointer-events-none uppercase">
+       {{ categoryId }}
+    </div>
+  </header>
+
+  <!-- SUB-NAVEGACIÓN STICKY (AL ESTILO EDITORIAL) -->
+  <nav class="sticky top-16 z-40 bg-white/90 backdrop-blur-md border-b border-gray-200 w-full overflow-x-auto">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 flex items-center h-14 gap-8 whitespace-nowrap scrollbar-hide">
+      <button *ngFor="let section of pageData.sections" 
+              (click)="scrollToSection(section.id)"
+              class="text-[10px] font-bold uppercase tracking-widest transition-all duration-300 relative py-4"
+              [ngClass]="activeId === section.id ? 'text-black' : 'text-gray-400 hover:text-gray-600'">
+        {{ section.title }}
+        <span *ngIf="activeId === section.id" class="absolute bottom-0 left-0 w-full h-[2px] bg-black"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO DE SECCIONES (LAYOUT ASIMÉTRICO) -->
+  <main class="max-w-7xl mx-auto px-6 lg:px-12 pt-32">
+    
+    <div *ngFor="let section of pageData.sections; let i = index" 
+         [attr.id]="section.id" 
+         class="mb-48 scroll-mt-32">
+      
+      <!-- Layout Alternado: I % 2 == 0 (Imagen Derecha) / I % 2 != 0 (Imagen Izquierda) -->
+      <div class="flex flex-col md:flex-row gap-16 lg:gap-24 items-start" 
+           [ngClass]="i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'">
+        
+        <!-- Bloque de Texto (1/3 o 2/5) -->
+        <div class="w-full md:w-[40%] flex flex-col pt-4">
+          <span class="text-[10px] font-black text-gray-300 mb-6 uppercase tracking-[0.5em]">0{{ i + 1 }} / {{ pageData.sections.length }}</span>
+          <h3 class="text-4xl lg:text-5xl font-light text-black mb-10 tracking-tight leading-none italic">{{ section.title }}</h3>
+          <p class="text-xl lg:text-2xl font-light text-gray-600 leading-[1.6] text-justify md:text-left">
+            {{ section.content }}
+          </p>
+          
+          <a [routerLink]="['/', categoryId, section.id]" class="mt-12 group cursor-pointer inline-flex items-center gap-4 text-[11px] font-bold uppercase tracking-widest text-black">
+             Explorar Detalle <span class="group-hover:translate-x-2 transition-transform duration-300">→</span>
+          </a>
+        </div>
+
+        <!-- Bloque de Imagen Elevada (60%) -->
+        <div class="w-full md:w-[60%] relative group">
+           <!-- Frame decorativo asimétrico -->
+           <div class="absolute -inset-4 border border-gray-100 -z-10 group-hover:inset-0 transition-all duration-700"></div>
+           
+           <div class="aspect-[4/5] md:aspect-[16/10] bg-gray-100 overflow-hidden relative shadow-2xl">
+              <img [src]="section.image" 
+                   class="absolute inset-0 w-full h-full object-cover transition-all duration-[1s] grayscale group-hover:grayscale-0 group-hover:scale-105">
+              <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700"></div>
+           </div>
+           
+           <!-- Caption minimalista -->
+           <p class="mt-4 text-[9px] font-bold text-gray-400 uppercase tracking-widest text-right">
+              Archivo Corporativo Impactex • 2026
+           </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- CIERRE DE PORTAL -->
+  <div class="max-w-2xl mx-auto px-6 text-center pt-20">
+     <div class="w-px h-32 bg-gray-200 mx-auto mb-12"></div>
+     <h4 class="text-xl font-light text-gray-400 mb-12">Has llegado al final de esta sección.</h4>
+     <a routerLink="/" class="text-[10px] font-black uppercase tracking-[0.3em] text-black border border-black px-12 py-5 hover:bg-black hover:text-white transition-all duration-500">
+        Volver al Escritorio
+     </a>
+  </div>
+
+</div>

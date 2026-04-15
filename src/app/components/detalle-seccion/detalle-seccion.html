@@ -1,0 +1,68 @@
+<!-- VISTA DE DETALLE INMERSIVO (ESTILO EDITORIAL IMPACTEX) -->
+<div class="w-full bg-white min-h-screen" *ngIf="data">
+  
+  <!-- HERO HEADLINE -->
+  <header class="w-full relative overflow-hidden bg-black">
+    <!-- Imagen limpia sin texto encima -->
+    <div class="w-full h-[75vh] relative">
+      <img [src]="data.image" 
+           class="absolute inset-0 w-full h-full object-contain bg-black opacity-80 transition-all duration-[3s] grayscale hover:grayscale-0">
+    </div>
+    
+    <!-- Título debajo de la foto -->
+    <div class="relative z-10 bg-black px-8 md:px-16 py-12">
+      <a [routerLink]="['/', categoryId]" class="text-[10px] font-black uppercase tracking-[0.4em] text-white/70 hover:text-white transition-colors mb-6 inline-block">
+        ← Volver a {{ categoryId | uppercase }}
+      </a>
+      <h1 class="text-4xl md:text-6xl font-black leading-none tracking-tighter text-white uppercase" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+        {{ data.title }}
+      </h1>
+      <div class="w-24 h-px bg-white/30 mt-8"></div>
+      <div class="flex items-center gap-6 text-[9px] font-bold text-white/50 uppercase tracking-widest mt-6">
+         <span>Corporación Impactex</span>
+         <span class="w-1 h-1 bg-white/30 rounded-full"></span>
+         <span>Visión 2026-2030</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENIDO EDITORIAL EXPANDIDO -->
+  <article class="max-w-4xl mx-auto px-6 pt-32 pb-48">
+    
+    <div class="mb-24">
+       <p class="text-2xl md:text-3xl font-light text-black leading-snug mb-16 italic">
+          {{ data.content }}
+       </p>
+       
+       <!-- Aquí iría el contenido longForm que poblaremos luego -->
+       <div class="space-y-12 text-lg md:text-xl font-light text-gray-600 leading-relaxed text-justify" [innerHTML]="data.longForm || 'Próximamente más información detallada sobre este pilar corporativo.'">
+       </div>
+    </div>
+
+    <!-- SECCIÓN DE CIERRE / SIGUIENTE PASO -->
+    <footer class="pt-20 border-t border-gray-100 flex flex-col items-center">
+       <span class="text-[10px] font-black text-gray-300 uppercase tracking-[0.5em] mb-12">Continuar Explorando</span>
+       <h4 class="text-3xl font-light text-black mb-16 text-center italic">Nuestro compromiso es con el futuro del textil ecuatoriano.</h4>
+       
+       <div class="flex flex-wrap justify-center gap-8">
+          <a [routerLink]="['/', categoryId]" class="text-[11px] font-bold uppercase tracking-widest text-black border-b-2 border-black pb-1 hover:text-gray-500 hover:border-gray-500 transition-colors">
+            Volver al listado
+          </a>
+          <a routerLink="/" class="text-[11px] font-bold uppercase tracking-widest text-black border-b-2 border-black pb-1 hover:text-gray-500 hover:border-gray-500 transition-colors">
+            Ir al inicio
+          </a>
+       </div>
+    </footer>
+
+  </article>
+
+</div>
+
+<!-- ESTADO DE CARGA / ERROR -->
+<div class="w-full h-screen flex flex-col items-center justify-center p-12 text-center" *ngIf="!data">
+   <h2 class="text-3xl font-light text-black mb-6">Sección en actualización</h2>
+   <p class="text-gray-500 mb-12">Estamos preparando el contenido detallado para esta sección.</p>
+   <a routerLink="/" class="text-[10px] font-black uppercase tracking-widest text-black border border-black px-12 py-5">
+      Volver
+   </a>
+</div>

@@ -1,0 +1,32 @@
+<!-- IMPACTEX STYLE ULTRALIGHT NAVBAR -->
+<nav class="w-full bg-white fixed top-0 z-50 border-b border-gray-100 flex items-center justify-between px-6 xl:px-12 h-16 shadow-sm">
+  
+  <!-- LEFT: Links Corporativos -->
+  <div class="hidden lg:flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-black">
+    <a routerLink="/grupo" class="hover:text-gray-500 transition-colors cursor-pointer">Grupo</a>
+    <a routerLink="/grupo" fragment="marcas" class="hover:text-gray-500 transition-colors cursor-pointer">Marcas</a>
+    <a routerLink="/sostenibilidad" class="hover:text-gray-500 transition-colors cursor-pointer">Sostenibilidad</a>
+    <a routerLink="/talento" class="hover:text-gray-500 transition-colors cursor-pointer">Talento</a>
+  </div>
+
+  <!-- Banderín Móvil (Oculto en desktop) -->
+  <div class="lg:hidden flex items-center">
+    <i class="fas fa-bars text-xl text-black cursor-pointer"></i>
+  </div>
+
+  <!-- CENTER: Text Logo Massive -->
+  <div class="absolute left-1/2 -translate-x-1/2">
+    <a routerLink="/" class="text-3xl font-black tracking-tighter text-black select-none pointer-events-auto" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+      IMPACTEX
+    </a>
+  </div>
+
+  <!-- RIGHT: Extras -->
+  <div class="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-black">
+
+    <a routerLink="/informacion" fragment="contacto" class="hover:text-gray-500 transition-colors cursor-pointer hidden sm:block">Contacto</a>
+    <a class="hover:text-gray-500 transition-colors cursor-pointer">EN / ES</a>
+    <i class="fas fa-search text-xs cursor-pointer hover:text-gray-500 transition-colors"></i>
+  </div>
+
+</nav>

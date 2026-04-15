@@ -1,0 +1,84 @@
+/* ESTILO IMPACTEX */
+:host {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+  background-color: #ffffff;
+  color: #000000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+/* EFECTOS DE SCROLL CINEMÁTICOS (REVEAL & FADE OUT) */
+.itx-fade-up {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.itx-fade-down {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+}
+
+/* Al entrar al viewport */
+.is-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Al pasar de largo hacia arriba (desaparece) */
+.is-hidden-top {
+  opacity: 0 !important;
+  transform: translateY(-80px) !important;
+  transition: opacity 1.5s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+/* ENLACES Y NAVEGACIÓN SUPER SUTILES */
+.itx-nav-link {
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+  position: relative;
+}
+
+.itx-nav-link:hover {
+  opacity: 0.5;
+}
+
+/* IMÁGENES ULTRA ESTRICTAS (SIN BORDES REDONDEADOS, RECTAS) */
+.itx-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* OVERLAYS SUAVES */
+.itx-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 40%);
+}
+
+/* MASSIVE TYPOGRAPHY */
+.massive-logo {
+  font-size: 16vw;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+}
+
+/* CUSTOM SCROLLBAR OCULTA */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

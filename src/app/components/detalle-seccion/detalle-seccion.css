@@ -1,0 +1,21 @@
+/* ESTILOS PARA DETALLE DE SECCIÓN CORPORATIVA */
+
+:host {
+    display: block;
+    background-color: #ffffff;
+}
+
+/* Transiciones suaves para las imágenes de detalle */
+img {
+    transition: filter 1.5s ease-in-out, transform 2s ease-in-out;
+}
+
+/* El efecto grayscale ya se maneja con Tailwind en el HTML, 
+   pero aquí aseguramos suavidad extra si se requieren ajustes finos. */
+.grayscale-hover {
+    filter: grayscale(100%);
+}
+
+.grayscale-hover:hover {
+    filter: grayscale(0%);
+}
