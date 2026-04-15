@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "node -r dotenv/config ./node_modules/@angular/cli/bin/ng serve --configuration development",
-    "build": "node -r dotenv/config ./node_modules/@angular/cli/bin/ng build",
+    "build": "ng build",
+    "build:local": "node -r dotenv/config ./node_modules/@angular/cli/bin/ng build",
     "watch": "node -r dotenv/config ./node_modules/@angular/cli/bin/ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:Impactex-Web-Front": "node dist/Impactex-Web-Front/server/server.mjs"
