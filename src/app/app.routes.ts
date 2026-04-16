@@ -35,14 +35,14 @@ export const routes: Routes = [
     title: 'ATS Recursos Humanos | Impactex'
   },
   {
-    path: ':categoria',
-    component: VisorCorporativoComponent,
-    title: 'Impactex Portal Corporativo'
-  },
-  {
     path: ':categoria/:subseccion',
     component: DetalleSeccionComponent,
     title: 'Detalle Corporativo | Impactex'
+  },
+  {
+    path: ':categoria',
+    component: VisorCorporativoComponent,
+    title: 'Impactex Portal Corporativo'
   },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 

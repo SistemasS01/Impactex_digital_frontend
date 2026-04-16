@@ -19,6 +19,13 @@
         </div>
       </div>
     </div>
+    <!-- Imagen hero de sección -->
+    <div class="absolute inset-0 overflow-hidden">
+      <img *ngIf="pageData.sections.length" [src]="pageData.sections[0].image"
+           class="absolute inset-0 w-full h-full object-cover opacity-20 blur-sm"
+           aria-hidden="true">
+      <div class="absolute inset-0 bg-black/10"></div>
+    </div>
     <!-- Decoración sutil de fondo -->
     <div class="absolute -right-20 -bottom-20 text-[30vw] font-black text-gray-50 opacity-[0.4] select-none pointer-events-none uppercase">
        {{ categoryId }}
