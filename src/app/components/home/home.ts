@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, inject, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, inject, PLATFORM_ID, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private router = inject(Router);
   private empleoService = inject(EmpleoService);
   private platformId = inject(PLATFORM_ID);
+  private cdr = inject(ChangeDetectorRef);
  
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
 
@@ -264,9 +265,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
             }
           });
         }
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         console.error('Error al conectar con el Backend:', err);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -279,9 +282,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.empleoService.obtenerEmpleos().subscribe({
       next: (data) => {
         this.empleos = data;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error cargando empleos', err);
+        this.cdr.detectChanges();
       }
     });
   }
