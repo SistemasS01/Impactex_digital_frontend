@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://impactex-web-api.runasp.net',
+  apiUrl: process.env?.['BITE_API_URL'] || (globalThis as any).BITE_API_URL || '',
 };
