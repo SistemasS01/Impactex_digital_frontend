@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EmpleoService, WebEmpleo } from '../../services/empleo.service';
@@ -12,6 +12,7 @@ import { EmpleoService, WebEmpleo } from '../../services/empleo.service';
 })
 export class AdminEmpleosComponent implements OnInit {
   private empleoService = inject(EmpleoService);
+  private cdr = inject(ChangeDetectorRef);
 
   public adminSecret = '';
   public authenticated = false;
@@ -19,6 +20,7 @@ export class AdminEmpleosComponent implements OnInit {
   public empleos: WebEmpleo[] = [];
   public cargando = false;
   public guardando = false;
+  public errorCarga = '';
   
   // Formulario nuevo empleo
   public nuevoEmpleo: WebEmpleo = {
@@ -42,16 +44,53 @@ export class AdminEmpleosComponent implements OnInit {
     }
   }
 
-  cargarEmpleos() {
-    this.cargando = true;
-    this.empleoService.obtenerEmpleos().subscribe({
-      next: (data) => {
-        this.empleos = data;
-        this.cargando = false;
+  testConexion() {
+    this.errorCarga = '';
+    console.log('🧪 Iniciando test de conexión...');
+    this.empleoService.testConexion().subscribe({
+      next: (res) => {
+        console.log('✅ Conexión OK:', res);
+        alert('✅ Conexión al backend: EXITOSA\n\n' + res);
       },
       error: (err) => {
-        console.error(err);
+        console.error('❌ Error en test:', err);
+        alert('❌ No se puede conectar a:\n' + this.empleoService['apiBase'] + '\n\nError: ' + (err.message || err.statusText || 'Timeout o conexión rechazada'));
+      }
+    });
+  }
+
+  cargarEmpleos() {
+    this.cargando = true;
+    this.errorCarga = '';
+    console.log('🔄 Cargando empleos desde:', this.empleoService['apiBase']);
+    
+    this.empleoService.obtenerEmpleos().subscribe({
+      next: (data) => {
+        console.log('✅ Empleos cargados:', data);
+        this.empleos = data;
         this.cargando = false;
+        
+          // 🔴 IMPORTANTE: Fuerza que Angular actualice la vista
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
+        
+          console.log('✅ Vista actualizada. Empleos en pantalla:', this.empleos.length);
+        this.errorCarga = '';
+      },
+      error: (err) => {
+        console.error('❌ Error al cargar empleos:', err);
+          this.cdr.markForCheck();
+        this.cargando = false;
+        
+        if (err.status === 0) {
+          this.errorCarga = '❌ Error de conexión. Verifica que el backend esté activo en http://impactex-web-api.runasp.net';
+        } else if (err.status === 401) {
+          this.errorCarga = '❌ No autorizado. Contraseña incorrecta.';
+        } else if (err.status === 404) {
+          this.errorCarga = '❌ Endpoint no encontrado. Verifica la URL del API.';
+        } else {
+          this.errorCarga = `❌ Error del servidor: ${err.status} - ${err.statusText || err.message}`;
+        }
       }
     });
   }

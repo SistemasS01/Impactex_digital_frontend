@@ -16,6 +16,9 @@
       <button (click)="entrar()" class="w-full bg-[#005A87] text-white font-bold py-3 rounded-lg hover:bg-[#003B5C] transition-colors">
         Ingresar
       </button>
+      <button (click)="testConexion()" class="w-full bg-slate-400 text-white font-bold py-2 rounded-lg hover:bg-slate-500 transition-colors mt-2 text-sm">
+        🧪 Test de Conexión
+      </button>
     </div>
 
     <!-- PANTALLA ADMIN -->
@@ -71,6 +74,11 @@
           <div *ngIf="cargando" class="text-center py-8 text-slate-500">
             <i class="fas fa-spinner fa-spin text-3xl mb-2"></i>
             <p>Cargando empleos...</p>
+          </div>
+
+          <div *ngIf="errorCarga" class="bg-red-50 border border-red-300 rounded-lg p-4 mb-4 text-red-700 text-sm">
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+            {{ errorCarga }}
           </div>
 
           <div *ngIf="!cargando && empleos.length === 0" class="text-center py-8 text-slate-500">

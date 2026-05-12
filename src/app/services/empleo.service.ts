@@ -23,17 +23,37 @@ export class EmpleoService {
   private http = inject(HttpClient);
   private readonly apiBase = environment.apiUrl.replace(/\/+$/, '');
 
+  // 🧪 Testear conexión con el backend
+  testConexion() {
+    console.log('🧪 Testeando conexión a:', this.apiBase);
+    return this.http.get(`${this.apiBase}/Empleos/SetupTabla`, {
+      responseType: 'text'
+    });
+  }
+
   obtenerEmpleos() {
-    return this.http.get<WebEmpleo[]>(`${this.apiBase}/Empleos`);
+    console.log('📡 GET:', `${this.apiBase}/Empleos`);
+    return this.http.get<WebEmpleo[]>(`${this.apiBase}/Empleos`, {
+      headers: new HttpHeaders({
+        'Accept': 'application/json'
+      })
+    });
   }
 
   crearEmpleo(empleo: WebEmpleo, secret: string) {
-    const headers = new HttpHeaders().set('X-Admin-Secret', secret);
+    const headers = new HttpHeaders({
+      'X-Admin-Secret': secret,
+      'Content-Type': 'application/json'
+    });
+    console.log('📡 POST:', `${this.apiBase}/Empleos`);
     return this.http.post<WebEmpleo>(`${this.apiBase}/Empleos`, empleo, { headers });
   }
 
   eliminarEmpleo(id: number, secret: string) {
-    const headers = new HttpHeaders().set('X-Admin-Secret', secret);
+    const headers = new HttpHeaders({
+      'X-Admin-Secret': secret
+    });
+    console.log('📡 DELETE:', `${this.apiBase}/Empleos/${id}`);
     return this.http.delete(`${this.apiBase}/Empleos/${id}`, { headers });
   }
 
@@ -43,7 +63,7 @@ export class EmpleoService {
     if (archivo) {
       formData.append('archivo', archivo, archivo.name);
     }
-
+    console.log('📡 POST:', `${this.apiBase}/Postulaciones`);
     return this.http.post(`${this.apiBase}/Postulaciones`, formData);
   }
 }
