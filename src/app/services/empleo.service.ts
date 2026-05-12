@@ -40,6 +40,12 @@ export class EmpleoService {
     });
   }
 
+  loginAdmin(secret: string) {
+    return this.http.post<{ message: string }>(`${this.apiBase}/AdminAuth/login`, {
+      password: secret
+    });
+  }
+
   crearEmpleo(empleo: WebEmpleo, secret: string) {
     const headers = new HttpHeaders({
       'X-Admin-Secret': secret,

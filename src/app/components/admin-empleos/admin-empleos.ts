@@ -41,8 +41,15 @@ export class AdminEmpleosComponent implements OnInit {
       const savedKey = localStorage.getItem('adminSecret');
       if (savedKey) {
         this.adminSecret = savedKey;
-        this.authenticated = true;
-        this.cargarEmpleos();
+        this.empleoService.loginAdmin(savedKey).subscribe({
+          next: () => {
+            this.authenticated = true;
+            this.cargarEmpleos();
+          },
+          error: () => {
+            this.handleUnauthorized();
+          }
+        });
       }
     }
   }
@@ -59,13 +66,36 @@ export class AdminEmpleosComponent implements OnInit {
     const secret = this.getAdminSecret();
     if (!secret) return;
 
-    this.adminSecret = secret;
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('adminSecret', secret);
-    }
+    this.empleoService.loginAdmin(secret).subscribe({
+      next: () => {
+        this.adminSecret = secret;
+        if (typeof window !== 'undefined' && window.localStorage) {
+          localStorage.setItem('adminSecret', secret);
+        }
+        this.authenticated = true;
+        this.cargarEmpleos();
+      },
+      error: () => {
+        this.handleUnauthorized();
+        alert('Contrasena invalida.');
+      }
+    });
+  }
 
-    this.authenticated = true;
-    this.cargarEmpleos();
+  cerrarSesion() {
+    this.handleUnauthorized();
+    this.errorCarga = '';
+    this.empleos = [];
+    this.cargando = false;
+    this.guardando = false;
+    this.guardandoEdicion = false;
+    this.nuevoEmpleo = {
+      titulo: '',
+      empresa: 'Corporación Impactex',
+      ubicacion: 'Ambato, Tungurahua',
+      modalidad: 'Presencial',
+      descripcion: ''
+    };
   }
 
   testConexion() {
