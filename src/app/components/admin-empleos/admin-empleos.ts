@@ -47,6 +47,13 @@ export class AdminEmpleosComponent implements OnInit {
     }
   }
 
+  guardarSecret(value: string) {
+    this.adminSecret = value;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('adminSecret', value);
+    }
+  }
+
   // Simula un login
   entrar() {
     const secret = this.getAdminSecret();
@@ -141,6 +148,11 @@ export class AdminEmpleosComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
+        if (err?.status === 401) {
+          this.handleUnauthorized();
+          alert('Contraseña inválida. Vuelve a ingresar.');
+          return;
+        }
         alert("Error al publicar. Verifica que la contraseña sea correcta ('Impactex2024*').");
         this.guardando = false;
       }
@@ -194,6 +206,11 @@ export class AdminEmpleosComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.guardandoEdicion = false;
+        if (err?.status === 401) {
+          this.handleUnauthorized();
+          alert('Contraseña inválida. Vuelve a ingresar.');
+          return;
+        }
         alert('Error al actualizar. Verifica la contraseña.');
       }
     });
@@ -214,6 +231,11 @@ export class AdminEmpleosComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
+          if (err?.status === 401) {
+            this.handleUnauthorized();
+            alert('Contraseña inválida. Vuelve a ingresar.');
+            return;
+          }
           alert("Error al eliminar. Verifica la contraseña.");
         }
       });
@@ -221,6 +243,26 @@ export class AdminEmpleosComponent implements OnInit {
   }
 
   private getAdminSecret(): string {
-    return (this.adminSecret || '').trim();
+    let localSecret = '';
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localSecret = localStorage.getItem('adminSecret') || '';
+    }
+
+    const secret = (this.adminSecret || localSecret).trim();
+    if (!this.adminSecret && secret) {
+      this.adminSecret = secret;
+    }
+
+    return secret;
+  }
+
+  private handleUnauthorized() {
+    this.adminSecret = '';
+    this.authenticated = false;
+    this.mostrarModal = false;
+    this.empleoEdit = null;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem('adminSecret');
+    }
   }
 }

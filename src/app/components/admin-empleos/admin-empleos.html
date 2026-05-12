@@ -12,7 +12,7 @@
       <h2 class="text-xl font-bold mb-4 text-[#002B42]">Acceso Restringido</h2>
       <p class="text-sm text-slate-500 mb-6">Por favor ingresa la clave secreta de administración para continuar.</p>
       
-      <input type="password" [(ngModel)]="adminSecret" placeholder="Contraseña..." class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#005A87] focus:outline-none mb-4">
+      <input type="password" [(ngModel)]="adminSecret" (ngModelChange)="guardarSecret($event)" (keyup.enter)="entrar()" placeholder="Contraseña..." class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#005A87] focus:outline-none mb-4">
       <button (click)="entrar()" class="w-full bg-[#005A87] text-white font-bold py-3 rounded-lg hover:bg-[#003B5C] transition-colors">
         Ingresar
       </button>
