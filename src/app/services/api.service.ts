@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -8,20 +8,13 @@ import { environment } from '../../environments/environment';
 })
 export class ApiService {
   private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl ? `${environment.apiUrl}/api/Web` : '';
-  private hasApi = !!this.apiUrl;
+  private readonly apiBase = environment.apiUrl.replace(/\/+$/, '');
 
   getWebData(codigo: string): Observable<any> {
-    if (!this.hasApi) {
-      return EMPTY;
-    }
-    return this.http.get(`${this.apiUrl}/${codigo}`);
+    return this.http.get(`${this.apiBase}/Web/${codigo}`);
   }
 
   enviarLead(data: any): Observable<any> {
-    if (!this.hasApi) {
-      return EMPTY;
-    }
-    return this.http.post(`${this.apiUrl}/contacto`, data);
+    return this.http.post(`${this.apiBase}/Web/contacto`, data);
   }
 }
