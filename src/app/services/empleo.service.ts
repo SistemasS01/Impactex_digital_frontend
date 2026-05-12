@@ -49,6 +49,15 @@ export class EmpleoService {
     return this.http.post<WebEmpleo>(`${this.apiBase}/Empleos`, empleo, { headers });
   }
 
+  actualizarEmpleo(id: number, empleo: Partial<WebEmpleo>, secret: string) {
+    const headers = new HttpHeaders({
+      'X-Admin-Secret': secret,
+      'Content-Type': 'application/json'
+    });
+    console.log('PUT:', `${this.apiBase}/Empleos/${id}`);
+    return this.http.put<WebEmpleo>(`${this.apiBase}/Empleos/${id}`, empleo, { headers });
+  }
+
   eliminarEmpleo(id: number, secret: string) {
     const headers = new HttpHeaders({
       'X-Admin-Secret': secret

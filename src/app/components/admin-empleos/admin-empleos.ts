@@ -21,6 +21,9 @@ export class AdminEmpleosComponent implements OnInit {
   public cargando = false;
   public guardando = false;
   public errorCarga = '';
+  public mostrarModal = false;
+  public empleoEdit: WebEmpleo | null = null;
+  public guardandoEdicion = false;
   
   // Formulario nuevo empleo
   public nuevoEmpleo: WebEmpleo = {
@@ -34,14 +37,28 @@ export class AdminEmpleosComponent implements OnInit {
   ngOnInit(): void {
     // Inicialmente no cargamos a menos que se autentique si quieramos, 
     // pero podemos cargar los públicos para gestionarlos.
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const savedKey = localStorage.getItem('adminSecret');
+      if (savedKey) {
+        this.adminSecret = savedKey;
+        this.authenticated = true;
+        this.cargarEmpleos();
+      }
+    }
   }
 
   // Simula un login
   entrar() {
-    if (this.adminSecret) {
-      this.authenticated = true;
-      this.cargarEmpleos();
+    const secret = this.getAdminSecret();
+    if (!secret) return;
+
+    this.adminSecret = secret;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('adminSecret', secret);
     }
+
+    this.authenticated = true;
+    this.cargarEmpleos();
   }
 
   testConexion() {
@@ -96,13 +113,19 @@ export class AdminEmpleosComponent implements OnInit {
   }
 
   crearEmpleo() {
+    const secret = this.getAdminSecret();
+    if (!secret) {
+      alert('Ingresa la contraseña de administrador.');
+      return;
+    }
+
     if (!this.nuevoEmpleo.titulo || !this.nuevoEmpleo.descripcion) {
       alert("Por favor llena el título y la descripción.");
       return;
     }
 
     this.guardando = true;
-    this.empleoService.crearEmpleo(this.nuevoEmpleo, this.adminSecret).subscribe({
+    this.empleoService.crearEmpleo(this.nuevoEmpleo, secret).subscribe({
       next: (res) => {
         alert("Empleo publicado exitosamente.");
         this.guardando = false;
@@ -124,10 +147,67 @@ export class AdminEmpleosComponent implements OnInit {
     });
   }
 
+  abrirEdicion(job: WebEmpleo) {
+    this.empleoEdit = { ...job };
+    this.mostrarModal = true;
+  }
+
+  cerrarEdicion() {
+    this.mostrarModal = false;
+    this.empleoEdit = null;
+  }
+
+  guardarEdicion() {
+    const secret = this.getAdminSecret();
+    if (!secret) {
+      alert('Ingresa la contraseña de administrador.');
+      return;
+    }
+
+    if (!this.empleoEdit || !this.empleoEdit.idEmpleo) {
+      return;
+    }
+
+    if (!this.empleoEdit.titulo || !this.empleoEdit.descripcion) {
+      alert('Por favor llena el titulo y la descripcion.');
+      return;
+    }
+
+    this.guardandoEdicion = true;
+    const id = this.empleoEdit.idEmpleo;
+    const payload: Partial<WebEmpleo> = {
+      titulo: this.empleoEdit.titulo,
+      empresa: this.empleoEdit.empresa,
+      ubicacion: this.empleoEdit.ubicacion,
+      modalidad: this.empleoEdit.modalidad,
+      descripcion: this.empleoEdit.descripcion,
+      activo: this.empleoEdit.activo
+    };
+
+    this.empleoService.actualizarEmpleo(id, payload, secret).subscribe({
+      next: () => {
+        this.guardandoEdicion = false;
+        this.cerrarEdicion();
+        this.cargarEmpleos();
+        alert('Empleo actualizado correctamente.');
+      },
+      error: (err) => {
+        console.error(err);
+        this.guardandoEdicion = false;
+        alert('Error al actualizar. Verifica la contraseña.');
+      }
+    });
+  }
+
   eliminarEmpleo(id: number | undefined) {
     if (!id) return;
+    const secret = this.getAdminSecret();
+    if (!secret) {
+      alert('Ingresa la contraseña de administrador.');
+      return;
+    }
     if (confirm("¿Estás seguro de que deseas eliminar (ocultar) este empleo?")) {
-      this.empleoService.eliminarEmpleo(id, this.adminSecret).subscribe({
+      this.empleoService.eliminarEmpleo(id, secret).subscribe({
         next: () => {
           alert("Empleo eliminado.");
           this.cargarEmpleos();
@@ -138,5 +218,9 @@ export class AdminEmpleosComponent implements OnInit {
         }
       });
     }
+  }
+
+  private getAdminSecret(): string {
+    return (this.adminSecret || '').trim();
   }
 }
