@@ -246,6 +246,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   };
 
   ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.cargarDatos();
     this.cargarEmpleos();
   }
