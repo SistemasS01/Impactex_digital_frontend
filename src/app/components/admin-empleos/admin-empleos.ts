@@ -41,15 +41,7 @@ export class AdminEmpleosComponent implements OnInit {
       const savedKey = localStorage.getItem('adminSecret');
       if (savedKey) {
         this.adminSecret = savedKey;
-        this.empleoService.loginAdmin(savedKey).subscribe({
-          next: () => {
-            this.authenticated = true;
-            this.cargarEmpleos();
-          },
-          error: () => {
-            this.handleUnauthorized();
-          }
-        });
+        this.entrar();
       }
     }
   }
@@ -66,18 +58,20 @@ export class AdminEmpleosComponent implements OnInit {
     const secret = this.getAdminSecret();
     if (!secret) return;
 
-    this.empleoService.loginAdmin(secret).subscribe({
+    this.empleoService.validarAdminSecret(secret).subscribe({
       next: () => {
         this.adminSecret = secret;
         if (typeof window !== 'undefined' && window.localStorage) {
           localStorage.setItem('adminSecret', secret);
         }
+
         this.authenticated = true;
         this.cargarEmpleos();
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error en login:', err);
         this.handleUnauthorized();
-        alert('Contrasena invalida.');
+        alert('Contraseña inválida. Vuelve a ingresar.');
       }
     });
   }
@@ -183,7 +177,7 @@ export class AdminEmpleosComponent implements OnInit {
           alert('Contraseña inválida. Vuelve a ingresar.');
           return;
         }
-        alert("Error al publicar. Verifica que la contraseña sea correcta ('Impactex2024*').");
+        alert('Error al publicar. Verifica que la contraseña sea correcta.');
         this.guardando = false;
       }
     });

@@ -40,9 +40,13 @@ export class EmpleoService {
     });
   }
 
-  loginAdmin(secret: string) {
-    return this.http.post<{ message: string }>(`${this.apiBase}/AdminAuth/login`, {
-      password: secret
+  validarAdminSecret(secret: string) {
+    const headers = new HttpHeaders({
+      'X-Admin-Secret': secret
+    });
+    return this.http.get(`${this.apiBase}/Admin/Validar`, {
+      headers,
+      responseType: 'text'
     });
   }
 
