@@ -25,7 +25,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
  
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
 
-  
+  // Estado del banner de consentimiento
+  public mostrarConsentimiento = false;
+
   // Usamos 'any' para evitar que TypeScript se queje por ahora
   public webData: any = null;
 
@@ -225,6 +227,29 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public toggleTienda(tienda: string): void {
     this.tiendaActiva = this.tiendaActiva === tienda ? null : tienda;
   }
+
+  // --- Lógica de Consentimiento de Datos ---
+  public aceptarConsentimiento(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('impactex_consent', 'aceptado');
+      this.mostrarConsentimiento = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  public noAceptarConsentimiento(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      if (document.referrer && document.referrer !== '') {
+        window.history.back();
+        // Redirección de respaldo si el historial no permite regresar
+        setTimeout(() => {
+          window.location.href = 'https://www.google.com';
+        }, 500);
+      } else {
+        window.location.href = 'https://www.google.com';
+      }
+    }
+  }
   // --------------------------------------------
 
   public contenidos: { [key: string]: string } = {
@@ -248,6 +273,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
+    }
+
+    const consent = localStorage.getItem('impactex_consent');
+    if (consent !== 'aceptado') {
+      this.mostrarConsentimiento = true;
     }
 
     this.cargarDatos();

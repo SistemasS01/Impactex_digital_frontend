@@ -406,3 +406,20 @@
     </div>
   </div>
 </footer>
+
+<!-- BANNER DE CONSENTIMIENTO DE DATOS PERSONALES -->
+<div class="consent-banner" *ngIf="mostrarConsentimiento">
+  <div class="consent-container">
+    <p class="consent-title">Protección de Datos</p>
+    <p class="consent-text">
+      En <strong>Corporación Impactex Cia. Ltda.</strong>, tratamos tus datos personales conforme a la Ley Orgánica de Protección de Datos Personales, garantizando su seguridad y confidencialidad.
+    </p>
+    <p class="consent-text">
+      Puedes consultar nuestra Politica de Tratamiento de Datos en: <a href="https://drive.google.com/file/d/1Fb35O9xOg2YGshuhd3WUTJwTDWQqzFzd/view?pli=1" target="_blank" rel="noopener noreferrer" class="consent-link">www.impactex.com</a>
+    </p>
+    <div class="consent-buttons">
+      <button class="btn-aceptar" (click)="aceptarConsentimiento()">Aceptar</button>
+      <button class="btn-rechazar" (click)="noAceptarConsentimiento()">No aceptar</button>
+    </div>
+  </div>
+</div>
