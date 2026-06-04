@@ -336,12 +336,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      // Forzar reproducción del video si existe
-      if (this.heroVideo) {
-         const video = this.heroVideo.nativeElement;
-         video.muted = true;
-         video.play().catch(e => console.log('Error intentando reproducir el video:', e));
-      }
+      // Forzar reproducción del video tras un retraso para evitar interrupciones por hidratación
+      setTimeout(() => {
+        if (this.heroVideo) {
+           const video = this.heroVideo.nativeElement;
+           video.muted = true;
+           video.play().catch(e => console.log('Error intentando reproducir el video:', e));
+        }
+      }, 1000);
 
       // Retrasar levemente para asegurar que los elementos del DOM están renderizados
       setTimeout(() => {
