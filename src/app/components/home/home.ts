@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, inject, PLATFORM_ID, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, inject, PLATFORM_ID, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
@@ -15,7 +15,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 
   styleUrl: './home.css' // Asegúrate de que este archivo exista o bórralo
 })
-export class HomeComponent implements OnInit, AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private apiService = inject(ApiService);
   private el = inject(ElementRef);
   private router = inject(Router);
@@ -233,12 +233,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('impactex_consent', 'aceptado');
       this.mostrarConsentimiento = false;
+      document.body.style.overflow = '';
       this.cdr.detectChanges();
     }
   }
 
   public noAceptarConsentimiento(): void {
     if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = '';
       if (document.referrer && document.referrer !== '') {
         window.history.back();
         // Redirección de respaldo si el historial no permite regresar
@@ -278,10 +280,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const consent = localStorage.getItem('impactex_consent');
     if (consent !== 'aceptado') {
       this.mostrarConsentimiento = true;
+      document.body.style.overflow = 'hidden';
     }
 
     this.cargarDatos();
     this.cargarEmpleos();
+  }
+
+  ngOnDestroy(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = '';
+    }
   }
 
   cargarDatos(): void {

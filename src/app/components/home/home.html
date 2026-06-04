@@ -8,7 +8,7 @@
     <a routerLink="/" class="font-black text-2xl tracking-tighter cursor-pointer" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">IMPACTEX</a>
   </div>
   <div class="flex gap-6 items-center">
-    <a routerLink="/informacion" fragment="contacto" class="itx-nav-link text-black hover:text-gray-500 hidden sm:block cursor-pointer">Contacto</a>
+    <a (click)="irASeccion('contacto')" class="itx-nav-link text-black hover:text-gray-500 hidden sm:block cursor-pointer">Contacto</a>
     <a class="itx-nav-link text-black font-bold">ES</a>
     <i class="fas fa-search cursor-pointer text-sm text-black"></i>
   </div>
@@ -383,7 +383,7 @@
       <!-- Columna 5 (Posición 3 Fila 2): Información -->
       <div class="flex flex-col gap-4">
         <span class="text-black mb-2 border-b border-black pb-1 inline-block w-max">INFORMACIÓN</span>
-        <a routerLink="/informacion" fragment="contacto" class="hover:text-gray-500 cursor-pointer transition-colors block">Contacto</a>
+        <a (click)="irASeccion('contacto')" class="hover:text-gray-500 cursor-pointer transition-colors block">Contacto</a>
         <a routerLink="/informacion" fragment="cookies" class="hover:text-gray-500 cursor-pointer transition-colors block">Cookies</a>
         <a routerLink="/informacion" fragment="legal" class="hover:text-gray-500 cursor-pointer transition-colors block">Legal</a>
         <a routerLink="/informacion" fragment="accesibilidad" class="hover:text-gray-500 cursor-pointer transition-colors block">Accesibilidad</a>
@@ -406,6 +406,9 @@
     </div>
   </div>
 </footer>
+
+<!-- OVERLAY DE FONDO (BLOQUEA CLICS Y APLICA DIFUMINADO) -->
+<div class="consent-overlay" *ngIf="mostrarConsentimiento"></div>
 
 <!-- BANNER DE CONSENTIMIENTO DE DATOS PERSONALES -->
 <div class="consent-banner" *ngIf="mostrarConsentimiento">
