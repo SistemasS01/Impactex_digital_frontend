@@ -10,9 +10,9 @@
   </div>
 
   <!-- Banderín Móvil (Oculto en desktop) -->
-  <div class="lg:hidden flex items-center">
-    <i class="fas fa-bars text-xl text-black cursor-pointer"></i>
-  </div>
+  <button (click)="abrirMenu()" class="lg:hidden flex items-center text-black focus:outline-none cursor-pointer p-1" aria-label="Abrir menú">
+    <i class="fas fa-bars text-xl"></i>
+  </button>
 
   <!-- CENTER: Text Logo Massive -->
   <div class="absolute left-1/2 -translate-x-1/2">
@@ -30,3 +30,28 @@
   </div>
 
 </nav>
+
+<!-- PANEL MENÚ MÓVIL (DRAWER EDITORIAL GLOBAL) -->
+<div class="mobile-menu-overlay" *ngIf="menuAbierto" (click)="cerrarMenu()">
+  <div class="mobile-menu-drawer" (click)="$event.stopPropagation()">
+    <div class="mobile-menu-header">
+      <span class="mobile-menu-logo">IMPACTEX</span>
+      <button (click)="cerrarMenu()" class="mobile-menu-close" aria-label="Cerrar menú">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="mobile-menu-links">
+      <a routerLink="/grupo" (click)="cerrarMenu()" class="mobile-menu-link">Grupo</a>
+      <a routerLink="/grupo" fragment="marcas" (click)="cerrarMenu()" class="mobile-menu-link">Marcas</a>
+      <a routerLink="/sostenibilidad" (click)="cerrarMenu()" class="mobile-menu-link">Sostenibilidad</a>
+      <a routerLink="/talento" (click)="cerrarMenu()" class="mobile-menu-link">Talento</a>
+      <a routerLink="/" fragment="contacto" (click)="cerrarMenu()" class="mobile-menu-link">Contacto</a>
+    </div>
+    
+    <div class="mobile-menu-footer">
+      <span class="mobile-menu-lang font-bold">ES / EN</span>
+      <span class="mobile-menu-copyright">© 2026 IMPACTEX</span>
+    </div>
+  </div>
+</div>

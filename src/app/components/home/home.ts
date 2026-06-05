@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, inject, PLATFORM_ID, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, inject, PLATFORM_ID, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
@@ -27,6 +27,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Estado del banner de consentimiento
   public mostrarConsentimiento = false;
+  public menuMovilAbierto = false;
+  public mostrarScrollTop = false;
 
   // Usamos 'any' para evitar que TypeScript se queje por ahora
   public webData: any = null;
@@ -148,6 +150,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public irASeccion(id: string): void {
+    this.menuMovilAbierto = false;
     if (isPlatformBrowser(this.platformId)) {
       const el = document.getElementById(id);
       if (el) {
@@ -250,6 +253,25 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         window.location.href = 'https://www.google.com';
       }
+    }
+  }
+
+  // --- Lógica de Scroll to Top ---
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const scrollOffset = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      this.mostrarScrollTop = scrollOffset > 400;
+      this.cdr.detectChanges();
+    }
+  }
+
+  public scrollToTop(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
   }
   // --------------------------------------------

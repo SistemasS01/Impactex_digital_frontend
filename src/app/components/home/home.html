@@ -1,18 +1,53 @@
 <nav class="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md px-6 py-5 flex justify-between items-center transition-all duration-300">
+  <!-- LEFT: Links en desktop, icono hamburguesa en móvil -->
   <div class="flex gap-6 items-center">
-    <a routerLink="/grupo" class="itx-nav-link text-black hover:text-gray-500 cursor-pointer">Nosotros</a>
-    <a routerLink="/sostenibilidad" class="itx-nav-link text-black hover:text-gray-500 cursor-pointer">Sostenibilidad</a>
-    <a routerLink="/talento" class="itx-nav-link text-black hover:text-gray-500 hidden sm:block cursor-pointer">Talento</a>
+    <!-- Icono Menú Hamburguesa Móvil -->
+    <button (click)="menuMovilAbierto = true" class="lg:hidden text-black focus:outline-none cursor-pointer p-1" aria-label="Abrir menú">
+      <i class="fas fa-bars text-xl"></i>
+    </button>
+    
+    <!-- Enlaces Desktop -->
+    <div class="hidden lg:flex gap-6 items-center">
+      <a routerLink="/grupo" class="itx-nav-link text-black hover:text-gray-500 cursor-pointer">Nosotros</a>
+      <a routerLink="/sostenibilidad" class="itx-nav-link text-black hover:text-gray-500 cursor-pointer">Sostenibilidad</a>
+      <a routerLink="/talento" class="itx-nav-link text-black hover:text-gray-500 cursor-pointer">Talento</a>
+    </div>
   </div>
+  
   <div class="absolute left-1/2 transform -translate-x-1/2">
     <a routerLink="/" class="font-black text-2xl tracking-tighter cursor-pointer" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">IMPACTEX</a>
   </div>
+  
   <div class="flex gap-6 items-center">
     <a (click)="irASeccion('contacto')" class="itx-nav-link text-black hover:text-gray-500 hidden sm:block cursor-pointer">Contacto</a>
     <a class="itx-nav-link text-black font-bold">ES</a>
     <i class="fas fa-search cursor-pointer text-sm text-black"></i>
   </div>
 </nav>
+
+<!-- PANEL MENÚ MÓVIL (DRAWER EDITORIAL) -->
+<div class="mobile-menu-overlay" *ngIf="menuMovilAbierto" (click)="menuMovilAbierto = false">
+  <div class="mobile-menu-drawer" (click)="$event.stopPropagation()">
+    <div class="mobile-menu-header">
+      <span class="mobile-menu-logo">IMPACTEX</span>
+      <button (click)="menuMovilAbierto = false" class="mobile-menu-close" aria-label="Cerrar menú">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="mobile-menu-links">
+      <a routerLink="/grupo" (click)="menuMovilAbierto = false" class="mobile-menu-link">Nosotros</a>
+      <a routerLink="/sostenibilidad" (click)="menuMovilAbierto = false" class="mobile-menu-link">Sostenibilidad</a>
+      <a routerLink="/talento" (click)="menuMovilAbierto = false" class="mobile-menu-link">Talento</a>
+      <a (click)="irASeccion('contacto')" class="mobile-menu-link">Contacto</a>
+    </div>
+    
+    <div class="mobile-menu-footer">
+      <span class="mobile-menu-lang font-bold">ES</span>
+      <span class="mobile-menu-copyright">© 2026 IMPACTEX</span>
+    </div>
+  </div>
+</div>
 
 <!-- HERO SECTION (TIPO PORTADA EDITORIAL) -->
 <section id="hero" class="relative w-full h-[100vh] overflow-hidden bg-black flex items-end">
@@ -426,3 +461,8 @@
     </div>
   </div>
 </div>
+
+<!-- BOTÓN FLOTANTE SCROLL TO TOP -->
+<button class="scroll-to-top" *ngIf="mostrarScrollTop" (click)="scrollToTop()" aria-label="Ir arriba">
+  <i class="fas fa-arrow-up"></i>
+</button>
