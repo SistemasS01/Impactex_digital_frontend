@@ -1,9 +1,8 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, inject, PLATFORM_ID, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { EmpleoService, WebEmpleo } from '../../services/empleo.service';
-import { environment } from '../../../environments/environment';
 import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
@@ -15,21 +14,16 @@ import { FormsModule, NgForm } from '@angular/forms';
 
   styleUrl: './home.css' // Asegúrate de que este archivo exista o bórralo
 })
-export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewInit {
   private apiService = inject(ApiService);
   private el = inject(ElementRef);
   private router = inject(Router);
   private empleoService = inject(EmpleoService);
   private platformId = inject(PLATFORM_ID);
-  private cdr = inject(ChangeDetectorRef);
  
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
 
-  // Estado del banner de consentimiento
-  public mostrarConsentimiento = false;
-  public menuMovilAbierto = false;
-  public mostrarScrollTop = false;
-
+  
   // Usamos 'any' para evitar que TypeScript se queje por ahora
   public webData: any = null;
 
@@ -37,6 +31,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   public empleos: WebEmpleo[] = [];
   public searchTerm = '';
   public empleoActivo: WebEmpleo | null = null;
+
+  // Lógica del modal de aviso de privacidad para el Formulario de Contacto
+  public mostrarModalPrivacidadContacto = false;
+  private activeForm: NgForm | null = null;
 
   // Eliminada la lógica de Pestañas. Ahora todo es scroll continuo.
 
@@ -150,7 +148,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public irASeccion(id: string): void {
-    this.menuMovilAbierto = false;
     if (isPlatformBrowser(this.platformId)) {
       const el = document.getElementById(id);
       if (el) {
@@ -230,50 +227,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   public toggleTienda(tienda: string): void {
     this.tiendaActiva = this.tiendaActiva === tienda ? null : tienda;
   }
-
-  // --- Lógica de Consentimiento de Datos ---
-  public aceptarConsentimiento(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('impactex_consent', 'aceptado');
-      this.mostrarConsentimiento = false;
-      document.body.style.overflow = '';
-      this.cdr.detectChanges();
-    }
-  }
-
-  public noAceptarConsentimiento(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      document.body.style.overflow = '';
-      if (document.referrer && document.referrer !== '') {
-        window.history.back();
-        // Redirección de respaldo si el historial no permite regresar
-        setTimeout(() => {
-          window.location.href = 'https://www.google.com';
-        }, 500);
-      } else {
-        window.location.href = 'https://www.google.com';
-      }
-    }
-  }
-
-  // --- Lógica de Scroll to Top ---
-  @HostListener('window:scroll', [])
-  onWindowScroll(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const scrollOffset = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
-      this.mostrarScrollTop = scrollOffset > 400;
-      this.cdr.detectChanges();
-    }
-  }
-
-  public scrollToTop(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
-  }
   // --------------------------------------------
 
   public contenidos: { [key: string]: string } = {
@@ -295,77 +248,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   ngOnInit(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
-    const consent = localStorage.getItem('impactex_consent');
-    if (consent !== 'aceptado') {
-      this.mostrarConsentimiento = true;
-      document.body.style.overflow = 'hidden';
-    }
-
     this.cargarDatos();
     this.cargarEmpleos();
   }
 
-  ngOnDestroy(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      document.body.style.overflow = '';
-    }
-  }
-
-  cargarDatos(): void {
-    if (!environment.apiUrl) {
-      return;
-    }
-
-    this.apiService.getWebData('CORP').subscribe({
-      next: (res: any) => {
-        this.webData = res;
-        if (res.contenidos && Array.isArray(res.contenidos)) {
-          res.contenidos.forEach((c: any) => {
-            if (c.clave && c.valorTextual) {
-              this.contenidos[c.clave] = c.valorTextual;
-            }
-          });
-        }
-        this.cdr.detectChanges();
-      },
-      error: (err: any) => {
-        console.error('Error al conectar con el Backend:', err);
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  cargarEmpleos(): void {
-    if (!environment.apiUrl) {
-      return;
-    }
-
-    this.empleoService.obtenerEmpleos().subscribe({
-      next: (data) => {
-        this.empleos = data;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error cargando empleos', err);
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      // Forzar reproducción del video tras un retraso para evitar interrupciones por hidratación
-      setTimeout(() => {
-        if (this.heroVideo) {
-           const video = this.heroVideo.nativeElement;
-           video.muted = true;
-           video.play().catch(e => console.log('Error intentando reproducir el video:', e));
-        }
-      }, 1000);
+      // Forzar reproducción del video si existe
+      if (this.heroVideo) {
+         const video = this.heroVideo.nativeElement;
+         video.muted = true;
+         video.play().catch(e => console.log('Error intentando reproducir el video:', e));
+      }
 
       // Retrasar levemente para asegurar que los elementos del DOM están renderizados
       setTimeout(() => {
@@ -410,16 +304,49 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     elements.forEach(el => observer.observe(el));
   }
 
-  enviarFormulario(form: NgForm): void {
-    if (!environment.apiUrl) {
-      this.mensajeError = 'El backend no está configurado. No es posible enviar el formulario.';
-      return;
-    }
+  cargarDatos(): void {
+    this.apiService.getWebData('CORP').subscribe({
+      next: (res: any) => {
+        this.webData = res;
+        if (res.contenidos && Array.isArray(res.contenidos)) {
+          res.contenidos.forEach((c: any) => {
+            if (c.clave && c.valorTextual) {
+              this.contenidos[c.clave] = c.valorTextual;
+            }
+          });
+        }
+      },
+      error: (err: any) => {
+        console.error('Error al conectar con el Backend:', err);
+      }
+    });
+  }
 
+  cargarEmpleos(): void {
+    this.empleoService.obtenerEmpleos().subscribe({
+      next: (data) => {
+        this.empleos = data;
+      },
+      error: (err) => {
+        console.error('Error cargando empleos', err);
+      }
+    });
+  }
+
+  enviarFormulario(form: NgForm): void {
     if (form.invalid) {
       this.mensajeError = 'Por favor, completa todos los campos requeridos.';
       return;
     }
+
+    // Guardamos referencia al formulario y abrimos el modal de consentimiento de datos
+    this.activeForm = form;
+    this.mostrarModalPrivacidadContacto = true;
+  }
+
+  confirmarEnvioContacto(): void {
+    this.mostrarModalPrivacidadContacto = false;
+    if (!this.activeForm) return;
 
     this.enviando = true;
     this.mensajeExito = null;
@@ -429,12 +356,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (res: any) => {
         this.enviando = false;
         this.mensajeExito = '¡Gracias por contactarnos! Tu mensaje ha sido enviado.';
-        form.resetForm();
+        if (this.activeForm) {
+          this.activeForm.resetForm();
+          this.activeForm = null;
+        }
       },
       error: (err: any) => {
         this.enviando = false;
         this.mensajeError = 'Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde.';
+        this.activeForm = null;
       }
     });
+  }
+
+  cancelarEnvioContacto(): void {
+    this.mostrarModalPrivacidadContacto = false;
+    this.activeForm = null;
   }
 }

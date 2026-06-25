@@ -8,13 +8,13 @@ import { environment } from '../../environments/environment';
 })
 export class ApiService {
   private http = inject(HttpClient);
-  private readonly apiBase = environment.apiUrl.replace(/\/+$/, '');
+  private apiUrl = `${environment.apiUrl}/api/Web`; 
 
   getWebData(codigo: string): Observable<any> {
-    return this.http.get(`${this.apiBase}/Web/${codigo}`);
+    return this.http.get(`${this.apiUrl}/${codigo}`);
   }
 
   enviarLead(data: any): Observable<any> {
-    return this.http.post(`${this.apiBase}/Web/contacto`, data);
+    return this.http.post(`${this.apiUrl}/contacto`, data);
   }
 }

@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "http://impactex-web-api.runasp.net/api/:path*"
-    }
-  ]
-}

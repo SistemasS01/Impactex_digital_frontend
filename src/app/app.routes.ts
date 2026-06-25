@@ -6,6 +6,7 @@ import { PostulacionComponent } from './components/postulacion/postulacion';
 import { AtsDashboardComponent } from './components/ats-dashboard/ats-dashboard';
 import { VisorCorporativoComponent } from './components/visor-corporativo/visor-corporativo';
 import { DetalleSeccionComponent } from './components/detalle-seccion/detalle-seccion';
+import { PoliticaPrivacidadComponent } from './components/politica-privacidad/politica-privacidad.component';
 
 export const routes: Routes = [
   { 
@@ -35,14 +36,19 @@ export const routes: Routes = [
     title: 'ATS Recursos Humanos | Impactex'
   },
   {
-    path: ':categoria/:subseccion',
-    component: DetalleSeccionComponent,
-    title: 'Detalle Corporativo | Impactex'
+    path: 'politica-de-privacidad',
+    component: PoliticaPrivacidadComponent,
+    title: 'Política de Privacidad | Impactex'
   },
   {
     path: ':categoria',
     component: VisorCorporativoComponent,
     title: 'Impactex Portal Corporativo'
+  },
+  {
+    path: ':categoria/:subseccion',
+    component: DetalleSeccionComponent,
+    title: 'Detalle Corporativo | Impactex'
   },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 

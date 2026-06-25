@@ -1,0 +1,304 @@
+<!-- ================================================ -->
+<!-- IMPACTEX — POLÍTICA DE PRIVACIDAD               -->
+<!-- ================================================ -->
+
+<!-- Spacer navbar -->
+<div class="pp-spacer"></div>
+
+<!-- ===== HERO STRIP ===== -->
+<section class="pp-hero">
+  <div class="pp-hero-inner">
+    <span class="pp-kicker">CORPORACIÓN IMPACTEX · LEGAL</span>
+    <h1 class="pp-hero-title">Política de<br>Privacidad</h1>
+    <p class="pp-hero-meta">Última actualización: <strong>{{ lastUpdate }}</strong></p>
+  </div>
+</section>
+
+<!-- ===== PDF EMBEBIDO (Google Drive) ===== -->
+<section class="pp-pdf-section">
+  <div class="pp-pdf-inner">
+    <div class="pp-pdf-header">
+      <span class="pp-pdf-label">DOCUMENTO OFICIAL — POLÍTICA DE TRATAMIENTO DE DATOS</span>
+      <a href="https://drive.google.com/file/d/1Fb35O9xOg2YGshuhd3WUTJwTDWQqzFzd/view?usp=drive_link"
+         target="_blank" class="pp-pdf-download">
+        Abrir en Google Drive ↗
+      </a>
+    </div>
+    <div class="pp-pdf-frame-wrap">
+      <iframe
+        src="https://drive.google.com/file/d/1Fb35O9xOg2YGshuhd3WUTJwTDWQqzFzd/preview"
+        class="pp-pdf-frame"
+        allow="autoplay"
+        title="Política de Privacidad Corporación Impactex">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BANNER DE ESTADO DE CONSENTIMIENTO ===== -->
+<div *ngIf="consentStatus === 'accepted'" class="pp-consent-banner pp-consent-accepted">
+  <div class="pp-consent-inner">
+    <div class="pp-consent-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </div>
+    <div class="pp-consent-text">
+      <strong>Has aceptado nuestra Política de Privacidad y el uso de cookies.</strong><br>
+      <span *ngIf="consentDate">Consentimiento registrado el {{ consentDate }}. </span>
+      Tu navegación en este sitio está plenamente habilitada. Puedes revocar tu consentimiento 
+      borrando las cookies de tu navegador en cualquier momento.
+    </div>
+  </div>
+</div>
+
+<div *ngIf="consentStatus === 'rejected'" class="pp-consent-banner pp-consent-rejected">
+  <div class="pp-consent-inner">
+    <div class="pp-consent-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+      </svg>
+    </div>
+    <div class="pp-consent-text">
+      <strong>No has aceptado la Política de Privacidad.</strong><br>
+      El acceso al sitio puede estar limitado. Para disfrutar de todos los contenidos, 
+      por favor acepta las condiciones borrando las cookies de tu navegador y volviendo a visitar el sitio.
+    </div>
+  </div>
+</div>
+
+<div *ngIf="consentStatus === 'pending'" class="pp-consent-banner pp-consent-pending">
+  <div class="pp-consent-inner">
+    <div class="pp-consent-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+      </svg>
+    </div>
+    <div class="pp-consent-text">
+      <strong>Consentimiento pendiente.</strong><br>
+      Aún no has tomado una decisión sobre las cookies. El banner de consentimiento 
+      aparecerá al inicio de tu visita.
+    </div>
+  </div>
+</div>
+
+<!-- ===== CONTENIDO PRINCIPAL ===== -->
+<main class="pp-main">
+
+  <div class="pp-intro">
+    <p>
+      En Corporación Impactex, S.A., con domicilio en la Provincia de Tungurahua, Ecuador, 
+      nos comprometemos a proteger su privacidad y tratar sus datos personales con total 
+      transparencia, responsabilidad y seguridad. La presente Política de Privacidad describe 
+      cómo recopilamos, usamos, almacenamos y protegemos la información personal que usted 
+      nos proporciona a través de este sitio web.
+    </p>
+  </div>
+
+  <!-- Sección 1 -->
+  <article class="pp-section">
+    <div class="pp-section-num">01</div>
+    <div class="pp-section-body">
+      <h2 class="pp-section-title">Responsable del Tratamiento</h2>
+      <p>
+        El responsable del tratamiento de sus datos personales es <strong>Corporación Impactex S.A.</strong>, 
+        identificada con RUC 1890148844001, con domicilio en Av. 22 de Enero, Ambato, Tungurahua, Ecuador.
+      </p>
+      <p>
+        Para cualquier consulta relacionada con el tratamiento de sus datos, puede contactarnos a través 
+        del formulario de contacto disponible en este sitio web o escribiéndonos directamente.
+      </p>
+    </div>
+  </article>
+
+  <div class="pp-divider"></div>
+
+  <!-- Sección 2 -->
+  <article class="pp-section">
+    <div class="pp-section-num">02</div>
+    <div class="pp-section-body">
+      <h2 class="pp-section-title">Datos que Recopilamos</h2>
+      <p>Recopilamos los siguientes tipos de información personal:</p>
+      <ul class="pp-list">
+        <li><strong>Datos de contacto:</strong> nombre completo, dirección de correo electrónico, número de teléfono.</li>
+        <li><strong>Datos de comunicación:</strong> contenido de los mensajes que nos envía a través del formulario de contacto.</li>
+        <li><strong>Datos de navegación:</strong> dirección IP, tipo de navegador, páginas visitadas, tiempo de permanencia en el sitio.</li>
+        <li><strong>Datos de candidatos:</strong> currículum vitae, historial laboral y académico cuando postulas a una vacante.</li>
+        <li><strong>Cookies y tecnologías similares:</strong> información técnica para mejorar tu experiencia de navegación.</li>
+      </ul>
+    </div>
+  </article>
+
+  <div class="pp-divider"></div>
+
+  <!-- Sección 3 -->
+  <article class="pp-section">
+    <div class="pp-section-num">03</div>
+    <div class="pp-section-body">
+      <h2 class="pp-section-title">Finalidad y Base Jurídica del Tratamiento</h2>
+      <p>Utilizamos sus datos personales para las siguientes finalidades:</p>
+      <div class="pp-table-wrap">
+        <table class="pp-table">
+          <thead>
+            <tr>
+              <th>Finalidad</th>
+              <th>Base jurídica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Atender consultas y solicitudes de contacto</td>
+              <td>Interés legítimo / Consentimiento</td>
+            </tr>
+            <tr>
+              <td>Gestión de procesos de selección de personal</td>
+              <td>Ejecución de medidas precontractuales</td>
+            </tr>
+            <tr>
+              <td>Mejora de la experiencia de navegación</td>
+              <td>Consentimiento</td>
+            </tr>
+            <tr>
+              <td>Análisis estadístico del tráfico web</td>
+              <td>Interés legítimo</td>
+            </tr>
+            <tr>
+              <td>Envío de información corporativa y ofertas</td>
+              <td>Consentimiento explícito</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </article>
+
+  <div class="pp-divider"></div>
+
+  <!-- Sección 4 -->
+  <article class="pp-section">
+    <div class="pp-section-num">04</div>
+    <div class="pp-section-body">
+      <h2 class="pp-section-title">Política de Cookies</h2>
+      <p>
+        Las cookies son pequeños archivos de texto que se almacenan en su dispositivo cuando visita 
+        nuestro sitio web. Utilizamos los siguientes tipos de cookies:
+      </p>
+      <ul class="pp-list">
+        <li>
+          <strong>Cookies esenciales:</strong> Necesarias para el funcionamiento básico del sitio. 
+          No requieren consentimiento previo ya que son imprescindibles para la navegación.
+        </li>
+        <li>
+          <strong>Cookies analíticas:</strong> Nos permiten analizar el comportamiento de los 
+          visitantes de forma anónima para mejorar nuestros contenidos y servicios.
+        </li>
+        <li>
+          <strong>Cookies de preferencias:</strong> Recuerdan sus preferencias de navegación, 
+          como el idioma seleccionado o la región.
+        </li>
+        <li>
+          <strong>Cookies de terceros:</strong> Pueden ser instaladas por servicios externos 
+          integrados en nuestro sitio (mapas, vídeos, redes sociales).
+        </li>
+      </ul>
+      <p>
+        Puede configurar su navegador para rechazar todas las cookies, aceptar solo las esenciales 
+        o recibir un aviso antes de que se instale cualquier cookie. Tenga en cuenta que la 
+        desactivación de ciertas cookies puede afectar la funcionalidad del sitio.
+      </p>
+    </div>
+  </article>
+
+  <div class="pp-divider"></div>
+
+  <!-- Sección 5 -->
+  <article class="pp-section">
+    <div class="pp-section-num">05</div>
+    <div class="pp-section-body">
+      <h2 class="pp-section-title">Conservación de los Datos</h2>
+      <p>
+        Sus datos personales serán conservados durante el tiempo estrictamente necesario para cumplir 
+        con las finalidades descritas en esta política y, en su caso, mientras sean necesarios para 
+        dar cumplimiento a obligaciones legales aplicables. Una vez cumplida la finalidad, los datos 
+        serán eliminados de forma segura o anonimizados.
+      </p>
+      <ul class="pp-list">
+        <li><strong>Datos de contacto:</strong> Hasta 3 años desde el último contacto.</li>
+        <li><strong>Candidaturas:</strong> Hasta 2 años desde la presentación de la solicitud.</li>
+        <li><strong>Cookies de sesión:</strong> Se eliminan al cerrar el navegador.</li>
+        <li><strong>Cookies persistentes:</strong> Máximo 13 meses desde su instalación.</li>
+      </ul>
+    </div>
+  </article>
+
+  <div class="pp-divider"></div>
+
+  <!-- Sección 6 -->
+  <article class="pp-section">
+    <div class="pp-section-num">06</div>
+    <div class="pp-section-body">
+      <h2 class="pp-section-title">Sus Derechos</h2>
+      <p>
+        De acuerdo con la legislación ecuatoriana de protección de datos y las directrices 
+        internacionales aplicables, usted tiene los siguientes derechos:
+      </p>
+      <ul class="pp-list">
+        <li><strong>Acceso:</strong> Conocer qué datos personales tenemos sobre usted.</li>
+        <li><strong>Rectificación:</strong> Corregir datos inexactos o incompletos.</li>
+        <li><strong>Cancelación:</strong> Solicitar la eliminación de sus datos cuando ya no sean necesarios.</li>
+        <li><strong>Oposición:</strong> Oponerse al tratamiento de sus datos en determinadas circunstancias.</li>
+        <li><strong>Portabilidad:</strong> Recibir sus datos en un formato estructurado y legible por máquinas.</li>
+        <li><strong>Revocación:</strong> Retirar el consentimiento otorgado en cualquier momento, sin efectos retroactivos.</li>
+      </ul>
+      <p>
+        Para ejercer cualquiera de estos derechos, puede contactarnos a través del formulario de 
+        contacto disponible en este sitio web, indicando claramente el derecho que desea ejercer 
+        junto con una copia de su documento de identidad.
+      </p>
+    </div>
+  </article>
+
+  <div class="pp-divider"></div>
+
+  <!-- Sección 7 -->
+  <article class="pp-section">
+    <div class="pp-section-num">07</div>
+    <div class="pp-section-body">
+      <h2 class="pp-section-title">Seguridad de los Datos</h2>
+      <p>
+        Corporación Impactex adopta las medidas técnicas y organizativas apropiadas para garantizar 
+        un nivel de seguridad adecuado al riesgo existente, incluyendo la protección contra el 
+        tratamiento no autorizado o ilícito, la pérdida, destrucción o daño accidental de los datos. 
+        No obstante, le recordamos que ningún sistema de transmisión de datos por Internet es 
+        completamente seguro.
+      </p>
+    </div>
+  </article>
+
+  <div class="pp-divider"></div>
+
+  <!-- Sección 8 -->
+  <article class="pp-section">
+    <div class="pp-section-num">08</div>
+    <div class="pp-section-body">
+      <h2 class="pp-section-title">Modificaciones a esta Política</h2>
+      <p>
+        Corporación Impactex se reserva el derecho de modificar la presente Política de Privacidad 
+        para adaptarla a novedades legislativas, jurisprudenciales o a los cambios en nuestros 
+        servicios. En caso de modificaciones sustanciales, le informaremos mediante un aviso 
+        destacado en nuestro sitio web. La versión vigente siempre estará disponible en esta página.
+      </p>
+    </div>
+  </article>
+
+  <!-- CTA de regreso -->
+  <div class="pp-back-wrap">
+    <a routerLink="/" class="pp-back-btn">← Volver al inicio</a>
+  </div>
+
+</main>
+
+<!-- ===== FOOTER SIMPLE ===== -->
+<footer class="pp-footer">
+  <span class="pp-footer-copy">© 2026 Corporación Impactex · Provincia de Tungurahua, Ecuador</span>
+</footer>

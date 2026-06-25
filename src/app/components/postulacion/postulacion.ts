@@ -21,6 +21,7 @@ export class PostulacionComponent implements OnInit {
   
   public enviando = false;
   public exito = false;
+  public mostrarModalPrivacidadPostulacion = false;
 
   // Datos del Formulario
     public datos = {
@@ -169,12 +170,21 @@ export class PostulacionComponent implements OnInit {
     }
   }
 
-  enviarPostulacion() {
+  solicitarConsentimientoPostulacion() {
     if (!this.archivoCV) {
       alert("Es obligatorio subir tu CV en PDF para postularte.");
       return;
     }
+    this.mostrarModalPrivacidadPostulacion = true;
+  }
 
+  cancelarEnvioPostulacion() {
+    this.mostrarModalPrivacidadPostulacion = false;
+  }
+
+  confirmarEnvioPostulacion() {
+    if (!this.archivoCV) return;
+    this.mostrarModalPrivacidadPostulacion = false;
     this.enviando = true;
     
     const payload = {
@@ -182,7 +192,7 @@ export class PostulacionComponent implements OnInit {
       ...this.datos
     };
 
-    this.empleoService.postular(payload, this.archivoCV).subscribe({
+    this.empleoService.postular(payload, this.archivoCV!).subscribe({
       next: (res) => {
         this.enviando = false;
         this.exito = true;

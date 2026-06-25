@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { finalize, switchMap } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { AdminCandidatosService, UpdateAtsDto } from '../../services/admin-candidatos.service';
 import { EmpleoService, WebEmpleo } from '../../services/empleo.service';
 
@@ -51,18 +51,11 @@ export class AtsDashboardComponent implements OnInit {
   }
 
   login() {
-    const secret = this.secretKey.trim();
-    if (!secret) {
-      alert('Ingresa la clave de administrador.');
-      return;
-    }
-
     this.loading = true;
     this.cdr.detectChanges(); // Forzar actualización visual del spinner
 
-    this.empleoService.validarAdminSecret(secret)
+    this.empleoService.obtenerEmpleos()
       .pipe(
-        switchMap(() => this.empleoService.obtenerEmpleos()),
         finalize(() => {
           this.loading = false;
           this.cdr.detectChanges(); // Forzar ocultar spinner pase lo que pase
@@ -73,15 +66,11 @@ export class AtsDashboardComponent implements OnInit {
           this.empleos = res;
           this.authenticated = true;
           if (typeof window !== 'undefined' && window.localStorage) {
-            localStorage.setItem('adminSecret', secret);
+            localStorage.setItem('adminSecret', this.secretKey);
           }
         },
         error: (err) => {
           console.error("Error en login:", err);
-          this.authenticated = false;
-          if (typeof window !== 'undefined' && window.localStorage) {
-            localStorage.removeItem('adminSecret');
-          }
           alert('Credencial incorrecta o error de red (revisa la consola).');
         }
       });

@@ -1,0 +1,64 @@
+<!-- ================================================ -->
+<!-- IMPACTEX — COOKIE CONSENT (diseño original LOPDP) -->
+<!-- ================================================ -->
+
+<!-- ===== MODAL DE COOKIES (Bottom Center) ===== -->
+<div *ngIf="bannerState === 'visible'"
+     class="itx-consent-backdrop"
+     [class.leaving]="isLeaving">
+
+  <div class="itx-consent-card" [class.leaving]="isLeaving">
+
+    <p class="itx-consent-title">PROTECCIÓN DE DATOS</p>
+
+    <p class="itx-consent-body">
+      La <strong>Corporación Impactex Cía. Ltda.</strong>, tratamos tus datos personales
+      conforme a la Ley Orgánica de Protección de Datos Personales, garantizando tu
+      seguridad y confidencialidad.
+    </p>
+
+    <p class="itx-consent-link-line">
+      Puedes consultar nuestra Política de Tratamiento de Datos en
+      <a href="https://drive.google.com/file/d/1Fb35O9xOg2YGshuhd3WUTJwTDWQqzFzd/view?usp=drive_link"
+         target="_blank" class="itx-consent-link">
+        Política de Privacidad
+      </a>
+    </p>
+
+    <div class="itx-consent-btns">
+      <button class="itx-btn-accept" (click)="aceptarCookies()">ACEPTAR</button>
+      <button class="itx-btn-reject" (click)="rechazarCookies()">NO ACEPTAR</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ===== MODAL DE BLOQUEO (Restringido - Centrado & Profesional) ===== -->
+<div *ngIf="bannerState === 'blocked'" class="itx-blocked-backdrop">
+  <div class="itx-blocked-card">
+
+    <div class="itx-blocked-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+      </svg>
+    </div>
+
+    <h2 class="itx-blocked-title">Acceso Restringido</h2>
+
+    <p class="itx-blocked-desc">
+      Has seleccionado <strong>No Aceptar</strong> la Política de Protección de Datos. Sin este
+      consentimiento <strong>no es posible continuar navegando</strong> en el sitio de
+      <strong>Corporación Impactex</strong>.
+    </p>
+
+    <button class="itx-btn-reload" (click)="recargarPagina()">
+      VOLVER A DECIDIR
+    </button>
+
+    <p class="itx-blocked-footer">© 2026 Corporación Impactex · Todos los derechos reservados</p>
+
+  </div>
+</div>
