@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,6 +15,7 @@ export class PostulacionComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private empleoService = inject(EmpleoService);
+  private cdr = inject(ChangeDetectorRef);
 
   public step: number = 1;
   public idEmpleo: number = 0;
@@ -176,16 +177,19 @@ export class PostulacionComponent implements OnInit {
       return;
     }
     this.mostrarModalPrivacidadPostulacion = true;
+    this.cdr.detectChanges();
   }
 
   cancelarEnvioPostulacion() {
     this.mostrarModalPrivacidadPostulacion = false;
+    this.cdr.detectChanges();
   }
 
   confirmarEnvioPostulacion() {
     if (!this.archivoCV) return;
     this.mostrarModalPrivacidadPostulacion = false;
     this.enviando = true;
+    this.cdr.detectChanges();
     
     const payload = {
       idEmpleo: this.idEmpleo,
@@ -196,10 +200,12 @@ export class PostulacionComponent implements OnInit {
       next: (res) => {
         this.enviando = false;
         this.exito = true;
+        this.cdr.detectChanges();
         window.scrollTo(0, 0);
       },
       error: (err) => {
         this.enviando = false;
+        this.cdr.detectChanges();
         console.error("Error detallado:", err);
         
         let mensajeFinal = "Hubo un error al enviar tu postulación.";

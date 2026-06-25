@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, inject, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, inject, PLATFORM_ID, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private router = inject(Router);
   private empleoService = inject(EmpleoService);
   private platformId = inject(PLATFORM_ID);
+  private cdr = inject(ChangeDetectorRef);
  
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
 
@@ -311,24 +312,33 @@ export class HomeComponent implements OnInit, AfterViewInit {
         if (res.contenidos && Array.isArray(res.contenidos)) {
           res.contenidos.forEach((c: any) => {
             if (c.clave && c.valorTextual) {
-              this.contenidos[c.clave] = c.valorTextual;
+              this.contentsUpdate(c.clave, c.valorTextual);
             }
           });
         }
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         console.error('Error al conectar con el Backend:', err);
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  // helper method to avoid duplicate assignment in forEach
+  private contentsUpdate(clave: string, valor: string) {
+    this.contenidos[clave] = valor;
   }
 
   cargarEmpleos(): void {
     this.empleoService.obtenerEmpleos().subscribe({
       next: (data) => {
         this.empleos = data;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error cargando empleos', err);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -336,12 +346,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
   enviarFormulario(form: NgForm): void {
     if (form.invalid) {
       this.mensajeError = 'Por favor, completa todos los campos requeridos.';
+      this.cdr.detectChanges();
       return;
     }
 
     // Guardamos referencia al formulario y abrimos el modal de consentimiento de datos
     this.activeForm = form;
     this.mostrarModalPrivacidadContacto = true;
+    this.cdr.detectChanges();
   }
 
   confirmarEnvioContacto(): void {
@@ -351,6 +363,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.enviando = true;
     this.mensajeExito = null;
     this.mensajeError = null;
+    this.cdr.detectChanges();
 
     this.apiService.enviarLead(this.leadData).subscribe({
       next: (res: any) => {
@@ -360,11 +373,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.activeForm.resetForm();
           this.activeForm = null;
         }
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.enviando = false;
         this.mensajeError = 'Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde.';
         this.activeForm = null;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -372,5 +387,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   cancelarEnvioContacto(): void {
     this.mostrarModalPrivacidadContacto = false;
     this.activeForm = null;
+    this.cdr.detectChanges();
   }
 }
