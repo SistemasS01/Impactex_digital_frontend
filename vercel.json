@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://impactex-web-api.runasp.net/api/:path*"
+      "destination": "http://impactex-web-api.runasp.net/api/:path*"
     }
   ]
 }
