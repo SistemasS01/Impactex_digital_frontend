@@ -18,8 +18,19 @@
         
         <!-- Tab Content Header -->
         <div class="bg-[#7023C6] p-8 text-white text-center">
-            <h1 class="text-3xl font-extrabold mb-2">Postúlate para unirte a la Familia Impactex</h1>
-            <p class="text-purple-100">Completa tu información para iniciar el proceso de selección.</p>
+            <h1 class="text-3xl font-extrabold mb-2">Postúlate para: {{ empleo?.titulo || 'Cargando vacante...' }}</h1>
+            <p class="text-purple-100" *ngIf="empleo">
+                {{ empleo.empresa }} · {{ empleo.ubicacion }} · {{ empleo.modalidad }}
+            </p>
+            <p class="text-purple-100" *ngIf="!empleo">
+                Completa tu información para iniciar el proceso de selección.
+            </p>
+        </div>
+
+        <!-- Descripción de la Vacante -->
+        <div *ngIf="empleo" class="bg-purple-50/50 p-6 border-b border-slate-100 text-slate-700">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-[#7023C6] mb-2"><i class="fas fa-info-circle mr-1"></i> Descripción del Cargo</h2>
+            <p class="text-sm leading-relaxed whitespace-pre-wrap text-slate-600 font-light">{{ empleo.descripcion }}</p>
         </div>
 
 

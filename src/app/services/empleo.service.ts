@@ -27,6 +27,10 @@ export class EmpleoService {
     return this.http.get<WebEmpleo[]>(`${this.apiUrl}/api/Empleos`);
   }
 
+  obtenerEmpleo(id: number) {
+    return this.http.get<WebEmpleo>(`${this.apiUrl}/api/Empleos/${id}`);
+  }
+
   crearEmpleo(empleo: WebEmpleo, secret: string) {
     const headers = new HttpHeaders().set('X-Admin-Secret', secret);
     return this.http.post<WebEmpleo>(`${this.apiUrl}/api/Empleos`, empleo, { headers });

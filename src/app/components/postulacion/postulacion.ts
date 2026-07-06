@@ -2,7 +2,7 @@ import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EmpleoService } from '../../services/empleo.service';
+import { EmpleoService, WebEmpleo } from '../../services/empleo.service';
 
 @Component({
   selector: 'app-postulacion',
@@ -19,6 +19,7 @@ export class PostulacionComponent implements OnInit {
 
   public step: number = 1;
   public idEmpleo: number = 0;
+  public empleo: WebEmpleo | null = null;
   
   public enviando = false;
   public exito = false;
@@ -47,7 +48,17 @@ export class PostulacionComponent implements OnInit {
     this.idEmpleo = Number(this.route.snapshot.paramMap.get('id'));
     if (!this.idEmpleo) {
       this.router.navigate(['/']);
+      return;
     }
+
+    this.empleoService.obtenerEmpleo(this.idEmpleo).subscribe({
+      next: (job) => {
+        this.empleo = job;
+      },
+      error: (err) => {
+        console.error("Error al cargar la vacante:", err);
+      }
+    });
   }
 
   // Gestión de Experiencia
