@@ -20,6 +20,7 @@ export class PostulacionComponent implements OnInit {
   public step: number = 1;
   public idEmpleo: number = 0;
   public empleo: WebEmpleo | null = null;
+  public errorCarga: string | null = null;
   
   public enviando = false;
   public exito = false;
@@ -45,19 +46,26 @@ export class PostulacionComponent implements OnInit {
   public nombreArchivo: string = '';
 
   ngOnInit(): void {
-    this.idEmpleo = Number(this.route.snapshot.paramMap.get('id'));
-    if (!this.idEmpleo) {
-      this.router.navigate(['/']);
-      return;
-    }
-
-    this.empleoService.obtenerEmpleo(this.idEmpleo).subscribe({
-      next: (job) => {
-        this.empleo = job;
-      },
-      error: (err) => {
-        console.error("Error al cargar la vacante:", err);
+    this.route.paramMap.subscribe(params => {
+      const idParam = params.get('id');
+      this.idEmpleo = Number(idParam);
+      if (!this.idEmpleo) {
+        this.router.navigate(['/']);
+        return;
       }
+
+      this.empleoService.obtenerEmpleo(this.idEmpleo).subscribe({
+        next: (job) => {
+          this.empleo = job;
+          this.errorCarga = null;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Error al cargar la vacante:", err);
+          this.errorCarga = err.message || JSON.stringify(err);
+          this.cdr.detectChanges();
+        }
+      });
     });
   }
 

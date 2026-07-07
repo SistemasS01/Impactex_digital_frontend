@@ -18,11 +18,14 @@
         
         <!-- Tab Content Header -->
         <div class="bg-[#7023C6] p-8 text-white text-center">
-            <h1 class="text-3xl font-extrabold mb-2">Postúlate para: {{ empleo?.titulo || 'Cargando vacante...' }}</h1>
+            <h1 class="text-3xl font-extrabold mb-2">Postúlate para: {{ empleo?.titulo || (errorCarga ? 'Error al cargar vacante' : 'Cargando vacante...') }}</h1>
             <p class="text-purple-100" *ngIf="empleo">
                 {{ empleo.empresa }} · {{ empleo.ubicacion }} · {{ empleo.modalidad }}
             </p>
-            <p class="text-purple-100" *ngIf="!empleo">
+            <p class="text-purple-100 font-light text-xs mt-2 bg-red-800/30 p-2 rounded" *ngIf="errorCarga">
+                ⚠️ Detalle del error: {{ errorCarga }}
+            </p>
+            <p class="text-purple-100" *ngIf="!empleo && !errorCarga">
                 Completa tu información para iniciar el proceso de selección.
             </p>
         </div>
