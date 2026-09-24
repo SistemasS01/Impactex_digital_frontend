@@ -79,7 +79,7 @@ export class AdminEmpleosComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        alert("Error al publicar. Verifica que la contraseña sea correcta ('Impactex2024*').");
+        alert("Error al publicar. Verifica que la contraseña sea correcta ('Impactex2025*').");
         this.guardando = false;
       }
     });

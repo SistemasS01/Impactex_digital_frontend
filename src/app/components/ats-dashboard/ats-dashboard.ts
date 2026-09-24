@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { finalize } from 'rxjs/operators';
+import { finalize, switchMap } from 'rxjs/operators';
 import { AdminCandidatosService, UpdateAtsDto } from '../../services/admin-candidatos.service';
 import { EmpleoService, WebEmpleo } from '../../services/empleo.service';
 
@@ -51,11 +51,18 @@ export class AtsDashboardComponent implements OnInit {
   }
 
   login() {
+    const secret = this.secretKey ? this.secretKey.trim() : '';
+    if (!secret) {
+      alert('Ingresa la clave de autorización HR.');
+      return;
+    }
+
     this.loading = true;
     this.cdr.detectChanges(); // Forzar actualización visual del spinner
 
-    this.empleoService.obtenerEmpleos()
+    this.atsService.validarAdminSecret(secret)
       .pipe(
+        switchMap(() => this.empleoService.obtenerEmpleos()),
         finalize(() => {
           this.loading = false;
           this.cdr.detectChanges(); // Forzar ocultar spinner pase lo que pase
@@ -66,12 +73,16 @@ export class AtsDashboardComponent implements OnInit {
           this.empleos = res;
           this.authenticated = true;
           if (typeof window !== 'undefined' && window.localStorage) {
-            localStorage.setItem('adminSecret', this.secretKey);
+            localStorage.setItem('adminSecret', secret);
           }
         },
         error: (err) => {
           console.error("Error en login:", err);
-          alert('Credencial incorrecta o error de red (revisa la consola).');
+          this.authenticated = false;
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.removeItem('adminSecret');
+          }
+          alert('Clave de autorización incorrecta o no autorizada.');
         }
       });
   }
@@ -107,7 +118,13 @@ export class AtsDashboardComponent implements OnInit {
           this.candidatos = data;
         },
         error: (err) => {
-          alert('Error al cargar candidatos');
+          console.error('Error al cargar candidatos:', err);
+          if (err && err.status === 401) {
+            alert('Clave inválida o sesión expirada. Vuelve a ingresar tu clave.');
+            this.logout();
+          } else {
+            alert('Error al cargar candidatos');
+          }
         }
       });
   }

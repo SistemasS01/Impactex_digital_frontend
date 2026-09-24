@@ -20,6 +20,11 @@ export class AdminCandidatosService {
     return this.http.get<any[]>(`${this.apiUrl}/api/AdminCandidatos/PorEmpleo/${idEmpleo}`, { headers });
   }
 
+  validarAdminSecret(secret: string) {
+    const headers = new HttpHeaders().set('X-Admin-Secret', secret);
+    return this.http.get(`${this.apiUrl}/api/Admin/Validar`, { headers, responseType: 'text' });
+  }
+
   actualizarEstadoCandidato(idPostulacion: number, data: UpdateAtsDto, secret: string) {
     const headers = new HttpHeaders().set('X-Admin-Secret', secret);
     return this.http.put(`${this.apiUrl}/api/AdminCandidatos/Actualizar/${idPostulacion}`, data, { headers });
