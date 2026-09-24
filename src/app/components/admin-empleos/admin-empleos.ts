@@ -1,6 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
 import { EmpleoService, WebEmpleo } from '../../services/empleo.service';
 
 @Component({
@@ -12,6 +13,7 @@ import { EmpleoService, WebEmpleo } from '../../services/empleo.service';
 })
 export class AdminEmpleosComponent implements OnInit {
   private empleoService = inject(EmpleoService);
+  private cdr = inject(ChangeDetectorRef);
 
   public adminSecret = '';
   public authenticated = false;
@@ -47,24 +49,35 @@ export class AdminEmpleosComponent implements OnInit {
     }
 
     this.cargando = true;
-    this.empleoService.validarAdminSecret(secret).subscribe({
-      next: () => {
-        this.adminSecret = secret;
-        this.authenticated = true;
-        if (typeof window !== 'undefined' && window.localStorage) {
-          localStorage.setItem('adminSecret', secret);
+    this.cdr.detectChanges();
+
+    this.empleoService.validarAdminSecret(secret)
+      .pipe(
+        finalize(() => {
+          this.cargando = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.adminSecret = secret;
+          this.authenticated = true;
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('adminSecret', secret);
+          }
+          this.cdr.detectChanges();
+          this.cargarEmpleos();
+        },
+        error: (err) => {
+          console.error('Error en autenticación:', err);
+          this.authenticated = false;
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.removeItem('adminSecret');
+          }
+          this.cdr.detectChanges();
+          alert('Contraseña inválida. Verifica que sea correcta (Impactex2025*).');
         }
-        this.cargarEmpleos();
-      },
-      error: (err) => {
-        this.cargando = false;
-        console.error('Error en autenticación:', err);
-        if (typeof window !== 'undefined' && window.localStorage) {
-          localStorage.removeItem('adminSecret');
-        }
-        alert('Contraseña inválida. Verifica que sea correcta (Impactex2025*).');
-      }
-    });
+      });
   }
 
   cerrarSesion() {
@@ -74,20 +87,30 @@ export class AdminEmpleosComponent implements OnInit {
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.removeItem('adminSecret');
     }
+    this.cdr.detectChanges();
   }
 
   cargarEmpleos() {
     this.cargando = true;
-    this.empleoService.obtenerEmpleos().subscribe({
-      next: (data) => {
-        this.empleos = data;
-        this.cargando = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.cargando = false;
-      }
-    });
+    this.cdr.detectChanges();
+
+    this.empleoService.obtenerEmpleos()
+      .pipe(
+        finalize(() => {
+          this.cargando = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.empleos = data || [];
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error al cargar empleos:', err);
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   crearEmpleo() {
@@ -97,53 +120,68 @@ export class AdminEmpleosComponent implements OnInit {
     }
 
     this.guardando = true;
-    this.empleoService.crearEmpleo(this.nuevoEmpleo, this.adminSecret).subscribe({
-      next: (res) => {
-        alert("Empleo publicado exitosamente.");
-        this.guardando = false;
-        // Limpiamos form
-        this.nuevoEmpleo = {
-          titulo: '',
-          empresa: 'Corporación Impactex',
-          ubicacion: 'Ambato, Tungurahua',
-          modalidad: 'Presencial',
-          descripcion: ''
-        };
-        this.cargarEmpleos();
-      },
-      error: (err) => {
-        console.error(err);
-        this.guardando = false;
-        if (err?.status === 401) {
-          alert("Contraseña inválida o sesión expirada.");
-          this.cerrarSesion();
-          return;
-        }
-        alert("Error al publicar. Verifica que la contraseña sea correcta ('Impactex2025*').");
-      }
-    });
-  }
+    this.cdr.detectChanges();
 
-  eliminarEmpleo(id: number | undefined) {
-    if (!id) return;
-    if (confirm("¿Estás seguro de que deseas eliminar (ocultar) este empleo?")) {
-      this.cargando = true;
-      this.empleoService.eliminarEmpleo(id, this.adminSecret).subscribe({
-        next: () => {
-          alert("Empleo eliminado exitosamente.");
+    this.empleoService.crearEmpleo(this.nuevoEmpleo, this.adminSecret)
+      .pipe(
+        finalize(() => {
+          this.guardando = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          alert("Empleo publicado exitosamente.");
+          // Limpiamos form
+          this.nuevoEmpleo = {
+            titulo: '',
+            empresa: 'Corporación Impactex',
+            ubicacion: 'Ambato, Tungurahua',
+            modalidad: 'Presencial',
+            descripcion: ''
+          };
           this.cargarEmpleos();
         },
         error: (err) => {
-          this.cargando = false;
           console.error(err);
           if (err?.status === 401) {
             alert("Contraseña inválida o sesión expirada.");
             this.cerrarSesion();
             return;
           }
-          alert("Error al eliminar el empleo. Verifica la contraseña.");
+          alert("Error al publicar. Verifica que la contraseña sea correcta ('Impactex2025*').");
         }
       });
+  }
+
+  eliminarEmpleo(id: number | undefined) {
+    if (!id) return;
+    if (confirm("¿Estás seguro de que deseas eliminar (ocultar) este empleo?")) {
+      this.cargando = true;
+      this.cdr.detectChanges();
+
+      this.empleoService.eliminarEmpleo(id, this.adminSecret)
+        .pipe(
+          finalize(() => {
+            this.cargando = false;
+            this.cdr.detectChanges();
+          })
+        )
+        .subscribe({
+          next: () => {
+            alert("Empleo eliminado exitosamente.");
+            this.cargarEmpleos();
+          },
+          error: (err) => {
+            console.error(err);
+            if (err?.status === 401) {
+              alert("Contraseña inválida o sesión expirada.");
+              this.cerrarSesion();
+              return;
+            }
+            alert("Error al eliminar el empleo. Verifica la contraseña.");
+          }
+        });
     }
   }
 }
