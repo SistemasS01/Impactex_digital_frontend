@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://impactex.vercel.app'
+  apiUrl: 'https://www.corporacionimpactex.com'
 };
