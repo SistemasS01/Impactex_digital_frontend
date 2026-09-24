@@ -30,15 +30,49 @@ export class AdminEmpleosComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    // Inicialmente no cargamos a menos que se autentique si quieramos, 
-    // pero podemos cargar los públicos para gestionarlos.
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const savedKey = localStorage.getItem('adminSecret');
+      if (savedKey) {
+        this.adminSecret = savedKey;
+        this.entrar();
+      }
+    }
   }
 
-  // Simula un login
   entrar() {
-    if (this.adminSecret) {
-      this.authenticated = true;
-      this.cargarEmpleos();
+    const secret = (this.adminSecret || '').trim();
+    if (!secret) {
+      alert('Ingresa la contraseña de administrador.');
+      return;
+    }
+
+    this.cargando = true;
+    this.empleoService.validarAdminSecret(secret).subscribe({
+      next: () => {
+        this.adminSecret = secret;
+        this.authenticated = true;
+        if (typeof window !== 'undefined' && window.localStorage) {
+          localStorage.setItem('adminSecret', secret);
+        }
+        this.cargarEmpleos();
+      },
+      error: (err) => {
+        this.cargando = false;
+        console.error('Error en autenticación:', err);
+        if (typeof window !== 'undefined' && window.localStorage) {
+          localStorage.removeItem('adminSecret');
+        }
+        alert('Contraseña inválida. Verifica que sea correcta (Impactex2025*).');
+      }
+    });
+  }
+
+  cerrarSesion() {
+    this.authenticated = false;
+    this.adminSecret = '';
+    this.empleos = [];
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem('adminSecret');
     }
   }
 
@@ -79,8 +113,13 @@ export class AdminEmpleosComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        alert("Error al publicar. Verifica que la contraseña sea correcta ('Impactex2025*').");
         this.guardando = false;
+        if (err?.status === 401) {
+          alert("Contraseña inválida o sesión expirada.");
+          this.cerrarSesion();
+          return;
+        }
+        alert("Error al publicar. Verifica que la contraseña sea correcta ('Impactex2025*').");
       }
     });
   }
@@ -88,14 +127,21 @@ export class AdminEmpleosComponent implements OnInit {
   eliminarEmpleo(id: number | undefined) {
     if (!id) return;
     if (confirm("¿Estás seguro de que deseas eliminar (ocultar) este empleo?")) {
+      this.cargando = true;
       this.empleoService.eliminarEmpleo(id, this.adminSecret).subscribe({
         next: () => {
-          alert("Empleo eliminado.");
+          alert("Empleo eliminado exitosamente.");
           this.cargarEmpleos();
         },
         error: (err) => {
+          this.cargando = false;
           console.error(err);
-          alert("Error al eliminar. Verifica la contraseña.");
+          if (err?.status === 401) {
+            alert("Contraseña inválida o sesión expirada.");
+            this.cerrarSesion();
+            return;
+          }
+          alert("Error al eliminar el empleo. Verifica la contraseña.");
         }
       });
     }

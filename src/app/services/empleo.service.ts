@@ -27,6 +27,14 @@ export class EmpleoService {
     return this.http.get<WebEmpleo[]>(`${this.apiUrl}/api/Empleos`);
   }
 
+  validarAdminSecret(secret: string) {
+    const headers = new HttpHeaders().set('X-Admin-Secret', secret);
+    return this.http.get(`${this.apiUrl}/api/Admin/Validar`, {
+      headers,
+      responseType: 'text'
+    });
+  }
+
   obtenerEmpleo(id: number) {
     return this.http.get<WebEmpleo>(`${this.apiUrl}/api/Empleos/${id}`);
   }
